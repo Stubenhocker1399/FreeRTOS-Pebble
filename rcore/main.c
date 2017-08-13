@@ -39,12 +39,10 @@ void hardware_init(void)
     KERN_LOG("init", APP_LOG_LEVEL_INFO, "Power Init");
     flash_init();
     KERN_LOG("init", APP_LOG_LEVEL_INFO, "Flash Init");
-    display_init();
-    KERN_LOG("init", APP_LOG_LEVEL_INFO, "Display Init");
-    display_splash_screen();
-    KERN_LOG("init", APP_LOG_LEVEL_INFO, "Display Splash Screen");
     vibrate_init();
     KERN_LOG("init", APP_LOG_LEVEL_INFO, "Vibro Init");
+    display_init();
+    KERN_LOG("init", APP_LOG_LEVEL_INFO, "Display Init");
     rcore_buttons_init();
     KERN_LOG("init", APP_LOG_LEVEL_INFO, "Buttons Init");
     rtc_init();

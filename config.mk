@@ -74,7 +74,6 @@ SRCS_all += rcore/rebbleos.c
 SRCS_all += rcore/smartstrap.c
 SRCS_all += rcore/rebble_time.c
 SRCS_all += rcore/rebble_memory.c
-SRCS_all += rcore/splashscreen.c
 SRCS_all += rcore/vibrate.c
 SRCS_all += rcore/flash.c
 SRCS_all += rcore/log.c
