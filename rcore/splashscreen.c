@@ -2,7 +2,7 @@
  *
  * RebbleOS
  *
- * Author: Stubenhocker
+ * Author: Barry Carter <barry.carter@gmail.com>
  */
 
 
