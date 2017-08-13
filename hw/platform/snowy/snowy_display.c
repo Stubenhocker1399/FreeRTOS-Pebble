@@ -602,7 +602,7 @@ void _snowy_display_start_frame(uint8_t xoffset, uint8_t yoffset)
  */
 void _snowy_display_send_frame()
 {
-     return _snowy_display_send_frame_slow();
+//     return _snowy_display_send_frame_slow();
     _snowy_display_cs(1);
     delay_us(80);
     // send over DMA
