@@ -80,6 +80,7 @@ void menu_draw_watch_list()
     while(node)
     {
         if ((!strcmp(node->name, "System")) ||
+            (!strcmp(node->name, "Splashscreen")) ||
             (!strcmp(node->name, "TrekV2")) ||
 //             (!strcmp(node->name, "91 Dub 4.0")) ||
             (!strcmp(node->name, "watchface")))

@@ -12,6 +12,7 @@
 #include "appmanager.h"
 #include "systemapp.h"
 #include "api_func_symbols.h"
+#include "../Apps/Splashscreen/splashscreen.h"
 
 /*
  * Module TODO
@@ -66,6 +67,7 @@ void appmanager_init(void)
 {
    
     // load the baked in 
+    _appmanager_add_to_manifest(_appmanager_create_app("Splashscreen", APP_TYPE_SYSTEM, splashscreen_main, true, 0));
     _appmanager_add_to_manifest(_appmanager_create_app("System", APP_TYPE_SYSTEM, systemapp_main, true, 0));
     _appmanager_add_to_manifest(_appmanager_create_app("Simple", APP_TYPE_FACE, simple_main, true, 0));
     _appmanager_add_to_manifest(_appmanager_create_app("NiVZ", APP_TYPE_FACE, nivz_main, true, 0));
@@ -80,7 +82,8 @@ void appmanager_init(void)
    
     // set off using system
     //appmanager_app_start("91 Dub 4.0");
-    appmanager_app_start("System");
+    //appmanager_app_start("System");
+    appmanager_app_start("Splashscreen");
     
     // create the task manager thread
     _app_thread_manager_task_handle = xTaskCreateStatic(_appmanager_app_thread, 
