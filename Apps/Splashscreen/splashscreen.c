@@ -38,8 +38,15 @@ static void splashscreen_window_load(Window *window)
     Layer *window_layer = window_get_root_layer(s_main_window);
     GRect bounds = layer_get_unobstructed_bounds(window_layer);
     s_canvas_layer = layer_create(bounds);
+
+    //GFont gothic_14 = fonts_get_system_font(FONT_KEY_GOTHIC_14);
+    GFont ghotic_18_bold = fonts_get_system_font(FONT_KEY_GOTHIC_18_BOLD);
+
     graphics_context_set_fill_color(nGContext, GColorRed);
     graphics_fill_rect(nGContext, GRect(0, 0, 144, 168), 0, GCornerNone);
+    graphics_context_set_fill_color(nGContext, GColorBlack);
+    graphics_draw_text(nGContext, "RebbleOS", ghotic_18_bold, GRect(144/2-27, 168/2-9, 100,25), 0, 0, 0);
+    
     layer_set_update_proc(s_canvas_layer, splashscreen_update_proc);
     layer_add_child(window_layer, s_canvas_layer);
     tick_timer_service_subscribe(SECOND_UNIT, splashscreen_tick_handler);
