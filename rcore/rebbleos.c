@@ -10,7 +10,7 @@
 #include "stdio.h"
 #include "rebbleos.h"
 #include "ngfxwrap.h"
-
+#include "splashscreen.h"
 
 // current status of te system
 SystemStatus system_status;
@@ -23,6 +23,8 @@ void rebbleos_init(void)
     
     rwatch_neographics_init();
     appmanager_init();
+    display_splash_screen();
+    
 
     // set up main rebble task thread
     
