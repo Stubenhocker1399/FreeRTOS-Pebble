@@ -120,6 +120,7 @@ SRCS_all += Apps/System/menu.c
 
 SRCS_all += Apps/System/test.c
 SRCS_all += Apps/System/notification.c
+SRCS_all += Apps/System/music.c
 
 include hw/chip/stm32f4xx/config.mk
 include hw/chip/stm32f2xx/config.mk
