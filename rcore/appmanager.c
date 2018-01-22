@@ -13,6 +13,7 @@
 #include "systemapp.h"
 #include "test.h"
 #include "notification.h"
+#include "color_test.h"
 #include "api_func_symbols.h"
 
 /*
@@ -76,6 +77,7 @@ void appmanager_init(void)
     _appmanager_add_to_manifest(_appmanager_create_app("NiVZ", APP_TYPE_FACE, nivz_main, true, &empty, &empty));
     _appmanager_add_to_manifest(_appmanager_create_app("Settings", APP_TYPE_SYSTEM, test_main, true, &empty, &empty));
     _appmanager_add_to_manifest(_appmanager_create_app("Notification", APP_TYPE_SYSTEM, notif_main, true, &empty, &empty));
+    _appmanager_add_to_manifest(_appmanager_create_app("Color Test", APP_TYPE_SYSTEM, color_test_main, true, &empty, &empty));
     _app_task_handle = NULL;
     
     // now load the ones on flash
@@ -87,6 +89,7 @@ void appmanager_init(void)
     // set off using system
     //appmanager_app_start("91 Dub 4.0");
     appmanager_app_start("System");
+    //appmanager_app_start("Color Test");
     
     // create the task manager thread
     _app_thread_manager_task_handle = xTaskCreateStatic(_appmanager_app_thread, 
