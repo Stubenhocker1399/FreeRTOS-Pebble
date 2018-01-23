@@ -88,8 +88,8 @@ void appmanager_init(void)
    
     // set off using system
     //appmanager_app_start("91 Dub 4.0");
-    appmanager_app_start("System");
-    //appmanager_app_start("Color Test");
+    //appmanager_app_start("System");
+    appmanager_app_start("Color Test");
     
     // create the task manager thread
     _app_thread_manager_task_handle = xTaskCreateStatic(_appmanager_app_thread, 
