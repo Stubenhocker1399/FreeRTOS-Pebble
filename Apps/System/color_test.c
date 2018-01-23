@@ -91,7 +91,7 @@ static void main_layer_update_proc(Layer *layer, GContext *ctx) {
     for (y = 0; y < 4; y++) {
         for(x = 0; x < 16; x++) {
             graphics_context_set_fill_color(ctx, colors[i]);
-            graphics_fill_rect(ctx, GRect(x*9, y*42, 9, 42), 0, GCornerNone);
+            graphics_fill_rect(ctx, GRect(x*9, y*42+21, 9, 21), 0, GCornerNone);
             i++;
         }
     }
@@ -103,14 +103,14 @@ static void color_test_window_load(Window *window) {
     
     s_color_bitmap = gbitmap_create_with_resource(474);
 
-    Layer *s_main_layer = layer_create(bounds);
-    layer_add_child(window_layer, s_main_layer);
     
     s_bitmap_layer = bitmap_layer_create(GRect(0,0,144,168));
     bitmap_layer_set_compositing_mode(s_bitmap_layer, GCompOpSet);
     bitmap_layer_set_bitmap(s_bitmap_layer, s_color_bitmap);
     layer_add_child(window_get_root_layer(window), 
                                           bitmap_layer_get_layer(s_bitmap_layer));
+    Layer *s_main_layer = layer_create(bounds);
+    layer_add_child(window_layer, s_main_layer);
     layer_set_update_proc(s_main_layer, main_layer_update_proc);
     layer_mark_dirty(s_main_layer);
 }
