@@ -10,33 +10,28 @@
 #include "status_bar_layer.h"
 #include "bitmap_layer.h"
 #include "graphics.h"
+#include "platform.h"
 
-typedef struct {
-    int hours;
-    int minutes;
-} Time;
-
-static Time s_last_time;
+static struct tm s_last_time;
 
 static void status_tick(struct tm *tick_time, TimeUnits tick_units)
 {
     // Store time
-    s_last_time.hours = tick_time->tm_hour % 12;
-    s_last_time.minutes = tick_time->tm_min;
+    memcpy(&s_last_time, tick_time, sizeof(struct tm));
 }
 
 StatusBarLayer *status_bar_layer_create(void)
 {
     StatusBarLayer *status_bar = (StatusBarLayer*)app_calloc(1, sizeof(StatusBarLayer));
     
-    GRect frame = GRect(0, 0, 144, STATUS_BAR_LAYER_HEIGHT);
+    GRect frame = GRect(0, 0, DISPLAY_COLS, STATUS_BAR_LAYER_HEIGHT);
     
     Layer* layer = layer_create(frame);
     // give the layer a reference back to us
     layer->container = status_bar;
     status_bar->layer = layer;
-    status_bar->background_color = GColorWhite;
-    status_bar->text_color = GColorBlack;
+    status_bar->background_color = GColorDarkGray;
+    status_bar->text_color = GColorWhite;
     status_bar->separator_mode = StatusBarLayerSeparatorModeDotted;
     
     layer_set_update_proc(layer, draw);
@@ -95,8 +90,8 @@ static void draw(Layer *layer, GContext *context)
     
     char time_string[8] = "";
     
-    printf("%d:%02d", s_last_time.hours, s_last_time.minutes);
-    snprintf(time_string, 8, "%d:%02d", s_last_time.hours, s_last_time.minutes);
+    rcore_strftime(time_string, 8, "%R", &s_last_time);
+    printf("%s", time_string);
     
     GRect text_bounds = GRect((full_bounds.size.w / 2) - 10, 0, 100, 10);
     graphics_draw_text_app(context, time_string, time_font, text_bounds, GTextOverflowModeTrailingEllipsis, n_GTextAlignmentLeft, 0);
