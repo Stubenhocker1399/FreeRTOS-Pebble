@@ -102,7 +102,7 @@ static void systemapp_window_load(Window *window)
 
     menu_set_click_config_onto_window(s_menu, window);
 
-    MenuItems *items = menu_items_create(8);
+    MenuItems *items = menu_items_create(9);
     menu_items_add(items, MenuItem("Music", "Maxwell's Silver Hammer", 71, music_item_selected));
     menu_items_add(items, MenuItem("Watchfaces", "All your faces", 25, watch_list_item_selected));
     menu_items_add(items, MenuItem("Settings", "Move Along", 24, test_item_selected));
