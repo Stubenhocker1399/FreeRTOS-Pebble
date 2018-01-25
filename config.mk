@@ -12,6 +12,7 @@ CFLAGS_all += -Ilib/neographics/src/fonts
 CFLAGS_all += -Ilib/neographics/src/text
 CFLAGS_all += -Ilib/minilib/inc
 CFLAGS_all += -Ilib/png
+CFLAGS_all += -Ilib/pbl_strftime/src
 CFLAGS_all += -IWatchfaces
 CFLAGS_all += -IApps
 CFLAGS_all += -IApps/System
@@ -71,6 +72,8 @@ SRCS_all += lib/neographics/src/text/text.c
 SRCS_all += lib/png/png.c
 SRCS_all += lib/png/upng.c
 
+SRCS_all += lib/pbl_strftime/src/strftime.c
+
 SRCS_all += rcore/ambient.c
 SRCS_all += rcore/appmanager.c
 SRCS_all += rcore/backlight.c
@@ -111,6 +114,7 @@ SRCS_all += rwatch/event/tick_timer_service.c
 SRCS_all += rwatch/event/app_timer.c
 SRCS_all += rwatch/ui/layer/status_bar_layer.c
 SRCS_all += rwatch/ui/animation/animation.c
+SRCS_all += rwatch/ui/animation/property_animation.c
 
 SRCS_all += Watchfaces/simple.c
 SRCS_all += Watchfaces/nivz.c
