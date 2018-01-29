@@ -11,6 +11,7 @@
 #include <stm32f4xx_i2c.h>
 #include "stm32f4x_i2c.h"
 #include "stm32_power.h"
+#include "log.h"
 
 static uint32_t I2C_write_bytes(I2C_conf_t *I2C_conf, uint8_t addr, uint8_t *buf, uint16_t cnt);
 static uint32_t I2C_read_bytes(I2C_conf_t *I2C_conf, uint8_t addr, uint8_t *buf, uint16_t cnt);
@@ -138,17 +139,17 @@ void I2C_read_reg(I2C_conf_t *I2C_conf, uint8_t addr, uint8_t reg, uint8_t *buf,
 
     // Send the Register Address
     I2C_start(I2C_conf);
-    printf("****I2C 1**\n");
+    DRV_LOG("stm32f4x_i2c", APP_LOG_LEVEL_INFO, "****I2C 1**");
     I2C_addr(I2C_conf, addr, I2C_Direction_Transmitter);
     (void)I2C_conf->I2Cx->SR2;
-    printf("****I2C 2**\n");
+    DRV_LOG("stm32f4x_i2c", APP_LOG_LEVEL_INFO, "****I2C 2**");
     I2C_conf->I2Cx->DR = reg;
     
     I2C_wait_for_flags(I2C_conf, I2C_SR1_BTF);
-    printf("****I2C 3**\n");
+    DRV_LOG("stm32f4x_i2c", APP_LOG_LEVEL_INFO, "****I2C 3**");
     // read
     I2C_read_bytes(I2C_conf, addr, buf, cnt);
-    printf("****I2C 4**\n");
+    DRV_LOG("stm32f4x_i2c", APP_LOG_LEVEL_INFO, "****I2C 4**");
 
     stm32_power_release(STM32_POWER_APB1, I2C_conf->RCC_APB1Periph_I2Cx);
 
@@ -336,7 +337,7 @@ static uint8_t I2C_wait_for_flags(I2C_conf_t *I2C_conf, uint32_t Flags)
     {
         if (!(timeout--))
         {
-            printf("Timeout I2C\n");
+            DRV_LOG("stm32f4x_i2c", APP_LOG_LEVEL_INFO, "Timeout I2C");
             return 1;
         }
     }
@@ -351,7 +352,7 @@ static uint8_t I2C_wait_idle(I2C_conf_t *I2C_conf)
     {
         if (!(timeout--))
         {
-            printf("i2C Timeout on Idle\n");
+            DRV_LOG("stm32f4x_i2c", APP_LOG_LEVEL_INFO, "I2C Timeout on Idle");
             return 1;
         }
     }

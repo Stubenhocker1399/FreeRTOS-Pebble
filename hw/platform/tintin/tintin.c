@@ -15,6 +15,7 @@
 #include <stm32f2xx_rcc.h>
 #include <stm32f2xx_syscfg.h>
 #include <misc.h>
+#include "log.h"
 
 #include "stm32_power.h"
 
@@ -92,12 +93,12 @@ void platform_init() {
 }
 
 void platform_init_late() {
-    printf("tintin: late init\n");
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "late init");
     RCC_ClocksTypeDef RCC_Clocks;
     RCC_GetClocksFreq(&RCC_Clocks);
-    printf("c     : %lu", SystemCoreClock);
-    printf("SYSCLK: %lu\n", RCC_Clocks.SYSCLK_Frequency);
-    printf("CFGR  : %lx\n", RCC->PLLCFGR);
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "c     : %lu", SystemCoreClock);
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "SYSCLK: %lu", RCC_Clocks.SYSCLK_Frequency);
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "CFGR  : %lx", RCC->PLLCFGR);
 }
 
 /*** watchdog timer ***/
@@ -147,7 +148,7 @@ static uint8_t _display_fb[168][20];
 
 
 void hw_display_init() {
-    printf("tintin: hw_display_init\n");
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "hw_display_init");
 
     stm32_power_request(STM32_POWER_APB1, RCC_APB1Periph_SPI2);
     stm32_power_request(STM32_POWER_AHB1, RCC_AHB1Periph_GPIOB);
@@ -203,11 +204,11 @@ void hw_display_init() {
 }
 
 void hw_display_reset() {
-    printf("tintin: hw_display_reset\n");
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "hw_display_reset");
 }
 
 void hw_display_start() {
-    printf("tintin: hw_display_start\n");
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "hw_display_start");
 }
 
 static void _display_write(unsigned char c) {
@@ -220,7 +221,7 @@ void hw_display_start_frame(uint8_t x, uint8_t y) {
     stm32_power_request(STM32_POWER_AHB1, RCC_AHB1Periph_GPIOB);
     stm32_power_request(STM32_POWER_APB1, RCC_APB1Periph_SPI2);
 
-    printf("tintin: here we go, slowly blitting %d %d\n", x, y);
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "tintin: here we go, slowly blitting %d %d\n", x, y);
     GPIO_WriteBit(GPIOB, 1 << 12, 1);
     delay_us(7);
     _display_write(0x80);
@@ -396,10 +397,10 @@ void hw_flash_init(void) {
     part_id |= _hw_flash_txrx(JEDEC_DUMMY) << 0;
     _hw_flash_enable(0);
     
-    printf("tintin flash: JEDEC ID %08lx\n", part_id);
+    KERN_LOG("tintin flash", APP_LOG_LEVEL_INFO, "tintin flash: JEDEC ID %08lx", part_id);
     
     if (part_id != JEDEC_IDCODE_MICRON_N25Q032A11) {
-        panic("tintin flash: unsupported part ID");
+        KERN_LOG("tintin flash", APP_LOG_LEVEL_ERROR, "unsupported part ID");
     }
     
     stm32_power_release(STM32_POWER_APB2, RCC_APB2Periph_SPI1);

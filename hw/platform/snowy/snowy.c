@@ -52,10 +52,10 @@ void platform_init_late()
     // Dump clocks
     RCC_ClocksTypeDef RCC_Clocks;
     RCC_GetClocksFreq(&RCC_Clocks);
-    printf("c     : %ld", SystemCoreClock);
-    printf("SYSCLK: %ld\n", RCC_Clocks.SYSCLK_Frequency);
-    printf("CFGR  : %ld\n", RCC->PLLCFGR);
-    printf("Relocating NVIC to 0x08004000\n");
+    DRV_LOG("snowy", APP_LOG_LEVEL_INFO, "c     : %ld", SystemCoreClock);
+    DRV_LOG("snowy", APP_LOG_LEVEL_INFO, "SYSCLK: %ld", RCC_Clocks.SYSCLK_Frequency);
+    DRV_LOG("snowy", APP_LOG_LEVEL_INFO, "CFGR  : %ld", RCC->PLLCFGR);
+    DRV_LOG("snowy", APP_LOG_LEVEL_INFO, "Relocating NVIC to 0x08004000");
 }
 
 /* Snowy platform button definitions */

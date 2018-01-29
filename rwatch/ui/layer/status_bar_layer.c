@@ -91,7 +91,7 @@ static void draw(Layer *layer, GContext *context)
     char time_string[8] = "";
     
     rcore_strftime(time_string, 8, "%R", &s_last_time);
-    printf("%s", time_string);
+    SYS_LOG("statbar", APP_LOG_LEVEL_INFO, "%s", time_string);
     
     GRect text_bounds = GRect((full_bounds.size.w / 2) - 10, 0, 100, 10);
     graphics_draw_text_app(context, time_string, time_font, text_bounds, GTextOverflowModeTrailingEllipsis, n_GTextAlignmentLeft, 0);

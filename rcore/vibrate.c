@@ -14,6 +14,7 @@
 #include "task.h"
 #include "semphr.h"
 #include <stdbool.h>
+#include "log.h"
 
 #define VIBRATE_QUEUE_MAX_WAIT_TICKS  20    // chosen by fair dice roll
 
@@ -141,8 +142,8 @@ void vibrate_stop(void)
 
 static void _print_pattern(VibratePattern_t *pattern)
 {
-    printf(">>> vibrate @%u:\n", (unsigned int)pattern);
-    printf("\tlength:%d, val[%d]=(.frequency=%u, .duration=%u)\n",
+    SYS_LOG("vibrate", APP_LOG_LEVEL_INFO, "@%u:", (unsigned int)pattern);
+    SYS_LOG("vibrate", APP_LOG_LEVEL_INFO, "\tlength:%d, val[%d]=(.frequency=%u, .duration=%u)",
            pattern->length,
            pattern->cur_buffer_index,
            pattern->buffer[pattern->cur_buffer_index].frequency,

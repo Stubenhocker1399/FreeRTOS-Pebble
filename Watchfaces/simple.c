@@ -49,7 +49,7 @@ static void simple_window_load(Window *window)
 
     tick_timer_service_subscribe(SECOND_UNIT, simple_tick);
     layer_mark_dirty(s_canvas_layer);
-    printf("WF load done\n");
+    SYS_LOG("simple", APP_LOG_LEVEL_INFO, "WF load done");
 }
 
 
@@ -60,7 +60,7 @@ static void simple_window_unload(Window *window)
 
 void simple_init(void)
 {
-    printf("init\n");
+    SYS_LOG("simple", APP_LOG_LEVEL_INFO, "init");
     s_main_window = window_create();
     
     window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -87,8 +87,7 @@ void simple_deinit(void)
 
 void simple_tick(struct tm *tick_time, TimeUnits tick_units)
 {   
-    printf("Simple\n");
-    printf("Simple: Tick %d\n", tick_time->tm_hour);
+    SYS_LOG("simple", APP_LOG_LEVEL_INFO, "Tick %d", tick_time->tm_hour);
     // Store time
     s_last_time.hours = tick_time->tm_hour;
     s_last_time.hours -= (s_last_time.hours > 12) ? 12 : 0;
@@ -102,7 +101,7 @@ void simple_tick(struct tm *tick_time, TimeUnits tick_units)
     // Redraw
     if (s_canvas_layer)
     {
-        printf("Dirty\n");
+        SYS_LOG("simple", APP_LOG_LEVEL_INFO, "Dirty");
         layer_mark_dirty(s_canvas_layer);
     }
 }

@@ -255,7 +255,7 @@ static uint8_t _button_check_time(void)
 static void _button_message_thread(void *pvParameters)
 {
     uint8_t data;
-    printf("BM\n");
+    SYS_LOG("buttons", APP_LOG_LEVEL_INFO, "BM");
     TickType_t time_increment = portMAX_DELAY;
            
     for( ;; )
@@ -279,7 +279,7 @@ static void _button_message_thread(void *pvParameters)
  */
 static void _button_debounce_thread(void *pvParameters)
 {
-    printf("BD\n");
+    SYS_LOG("buttons", APP_LOG_LEVEL_INFO, "BD");
     for( ;; )
     {
         // sleep forever waiting for something on the interrupts to wake us

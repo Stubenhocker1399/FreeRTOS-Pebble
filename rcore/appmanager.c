@@ -753,7 +753,7 @@ void app_back_single_click_handler(ClickRecognizerRef recognizer, void *context)
 {
     // Pop windows off
     Window *popped = window_stack_pop(true);
-    printf("POPPED! WAS THIS THE ROOT? %d\n", popped->node->previous == NULL);
+    SYS_LOG("appmgr", APP_LOG_LEVEL_INFO, "POPPED! WAS THIS THE ROOT? %d", popped->node->previous == NULL);
     if (popped->node->previous == NULL)
     {
         appmanager_app_start("System");

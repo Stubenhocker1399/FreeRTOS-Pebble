@@ -16,6 +16,7 @@ task.h is included from an application file. */
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "log.h"
 
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE
 
@@ -301,7 +302,7 @@ BlockLink_t *pxFirstFreeBlock;
 uint8_t *pucAlignedHeap;
 size_t uxAddress;
 
-printf("CALLOC INIT %x %d\n",(unsigned int)e_app_stack_heap, (int)xTotalHeapSize);
+SYS_LOG("appheap", APP_LOG_LEVEL_INFO, "CALLOC INIT %x %d",(unsigned int)e_app_stack_heap, (int)xTotalHeapSize);
 	/* Ensure the heap starts on a correctly aligned boundary. */
 	uxAddress = ( size_t ) e_app_stack_heap;
 
@@ -337,7 +338,7 @@ printf("CALLOC INIT %x %d\n",(unsigned int)e_app_stack_heap, (int)xTotalHeapSize
 	/* Only one block exists - and it covers the entire usable heap space. */
 	xMinimumEverFreeBytesRemaining = pxFirstFreeBlock->xBlockSize;
 	xFreeBytesRemaining = pxFirstFreeBlock->xBlockSize;
-printf("ALLOC %d\n", xFreeBytesRemaining);
+SYS_LOG("appheap", APP_LOG_LEVEL_INFO, "ALLOC %d", xFreeBytesRemaining);
 	/* Work out the position of the top bit in a size_t variable. */
 	xBlockAllocatedBit = ( ( size_t ) 1 ) << ( ( sizeof( size_t ) * heapBITS_PER_BYTE ) - 1 );
 }

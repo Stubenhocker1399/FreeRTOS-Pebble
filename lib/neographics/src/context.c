@@ -107,7 +107,7 @@ static n_GContext * n_graphics_context_create() {
     out->underlying_context = NULL;
 #endif
     if (out == NULL)
-        printf("NG: NO HEAP FREE\n");
+        SYS_LOG("context", APP_LOG_LEVEL_ERROR, "NG: NO HEAP FREE");
     n_graphics_context_set_stroke_color(out, (n_GColor) {.argb = 0b11000000});
     n_graphics_context_set_fill_color(out, (n_GColor) {.argb = 0b11111111});
     n_graphics_context_set_text_color(out, (n_GColor) {.argb = 0b11000000});
