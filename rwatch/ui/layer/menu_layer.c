@@ -45,7 +45,7 @@ void menu_layer_destroy(MenuLayer *menu)
     if (menu->cells_count > 0)
         app_free(menu->cells);
     app_free(menu);
-}
+} 
 
 int16_t menu_index_compare(const MenuIndex *a, const MenuIndex *b)
 {
@@ -406,7 +406,7 @@ void menu_cell_chalk_draw(GContext *ctx, const Layer *layer, const char *previou
     // Draw the selected item:
     const char *selected_title = selected->text;
     
-    bool has_icon = selected->image_res_id == NULL ? false : true;
+    bool has_icon = !selected->image_res_id ? false : true;
     
     if (selected_title)
     {

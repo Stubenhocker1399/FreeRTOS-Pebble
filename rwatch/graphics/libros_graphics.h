@@ -16,7 +16,7 @@ void graphics_draw_text_app(
     n_GTextAttributes * text_attributes);
 void graphics_draw_pixel_app(n_GContext * ctx, n_GPoint p);
 void graphics_draw_rect_app(n_GContext * ctx, n_GRect rect, uint16_t radius, n_GCornerMask mask);
-void graphics_draw_bitmap_in_rect_app(GContext *ctx, GBitmap *bitmap, GRect rect);
+void graphics_draw_bitmap_in_rect_app(GContext *ctx, const GBitmap *bitmap, GRect rect);
 void gpath_fill_app(n_GContext * ctx, n_GPath * path);
 void gpath_draw_app(n_GContext * ctx, n_GPath * path);
 void gpath_rotate_to_app(n_GPath * path, int32_t angle);
@@ -29,5 +29,5 @@ n_GRect _jimmy_layer_offset(n_GContext *ctx, n_GRect rect);
 n_GPoint _jimmy_layer_point_offset(n_GContext *ctx, n_GPoint point);
 
 GBitmap *graphics_capture_frame_buffer(n_GContext *context);
-GBitmap *graphics_capture_frame_buffer_format(n_GContext *context, GBitmap format);
-void graphics_release_frame_buffer(n_GContext *context, GBitmap *bitmap);
+GBitmap *graphics_capture_frame_buffer_format(n_GContext *context, GBitmapFormat format);
+bool graphics_release_frame_buffer(n_GContext *context, GBitmap *bitmap);

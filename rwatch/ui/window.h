@@ -90,6 +90,7 @@ bool window_stack_remove(Window *window, bool animated);
 bool window_stack_contains_window(Window *window);
 Window * window_stack_get_top_window(void);
 
+void window_dirty(bool is_dirty);
 void window_draw();
 
 

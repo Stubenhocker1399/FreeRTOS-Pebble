@@ -44,6 +44,10 @@ struct NotificationWindow
 
 Notification* notification_window_create(const char *app_name, const char *title, const char *body, GBitmap *icon, GColor color);
 
+void window_stack_push_notification(Notification *notification);
+
+Notification* notification_create(const char *app_name, const char *title, const char *body, GBitmap *icon, GColor color);
+
 Window* notification_window_get_window(NotificationWindow *notification_window);
 
 void notification_window_update_proc(Layer *layer, GContext *context);

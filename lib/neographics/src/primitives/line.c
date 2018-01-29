@@ -99,11 +99,11 @@ static uint16_t prv_fast_int_sqrt(uint16_t in) {
     while (abs(a - b) > 1) { // unrolled to 3 runs/iter for speed
         b = in / a;
         a = (a + b) / 2;
-        if (!abs(a - b) > 1)
+        if (!(abs(a - b) > 1))
             return a;
         b = in / a;
         a = (a + b) / 2;
-        if (!abs(a - b) > 1)
+        if (!(abs(a - b) > 1))
             return a;
         b = in / a;
         a = (a + b) / 2;

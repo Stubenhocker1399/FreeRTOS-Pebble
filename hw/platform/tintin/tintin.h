@@ -12,6 +12,8 @@ extern int printf ( const char* , ... );
 
 void debug_init();
 void debug_write(const unsigned char *p, size_t len);
+void log_clock_enable(void);
+void log_clock_disable(void);
 void platform_init();
 void platform_init_late();
 

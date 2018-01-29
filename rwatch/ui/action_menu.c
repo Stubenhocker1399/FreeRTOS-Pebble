@@ -22,8 +22,8 @@ struct ActionMenuLevel
 
 struct ActionMenuItem
 {
-    ActionMenuLevel *level;
-    char *label;
+    const ActionMenuLevel *level;
+    const char *label;
     void *action_data;
     ActionMenuPerformActionCb cb;
 };
@@ -40,7 +40,7 @@ struct ActionMenu
 
 char * action_menu_item_get_label(const ActionMenuItem * item)
 {
-    return item->label;
+    return (char *)item->label;
 }
 
 void * action_menu_item_get_action_data(const ActionMenuItem * item)
@@ -51,7 +51,7 @@ void * action_menu_item_get_action_data(const ActionMenuItem * item)
 ActionMenuLevel * action_menu_level_create(uint16_t max_items)
 {
     ActionMenuLevel *level = (ActionMenuLevel *)app_calloc(1, sizeof(ActionMenuLevel) + (sizeof(ActionMenuItem) * max_items));
-    level->capacity = max_items;
+    level->capacity = &max_items;
     level->count = 0;
     level->index = 0;
     
@@ -73,7 +73,7 @@ ActionMenuItem * action_menu_level_add_action(ActionMenuLevel * level, const cha
     new_item->cb = cb;
     new_item->action_data = action_data;
     
-    if (level->capacity == level->count)
+    if (*level->capacity == level->count)
         return NULL;
     
     items[level->count++] = *new_item;
@@ -96,7 +96,7 @@ void action_menu_hierarchy_destroy(const ActionMenuLevel * root, ActionMenuEachI
     app_free(root->display_mode);
     app_free(root->items);
     
-    app_free(root);
+    app_free((void *)root);
 }
 
 void * action_menu_get_context(ActionMenu * action_menu)
@@ -106,7 +106,7 @@ void * action_menu_get_context(ActionMenu * action_menu)
 
 ActionMenuLevel * action_menu_get_root_level(ActionMenu * action_menu)
 {
-    return action_menu->config->root_level;
+    return (ActionMenuLevel *)action_menu->config->root_level;
 }
 
 static void side_bar_update_proc(Layer *layer, GContext *nGContext)
@@ -120,7 +120,7 @@ static void side_bar_update_proc(Layer *layer, GContext *nGContext)
     graphics_fill_rect_app(nGContext, GRect(0, 0, layer->frame.size.w, layer->frame.size.h), 0, GCornerNone);
     
     // Draw the level:
-    int index = action_menu->level_index;
+    int index = (int)&action_menu->level_index;
     SYS_LOG("notification_window", APP_LOG_LEVEL_DEBUG, "INDEX: %d", index);
     graphics_context_set_fill_color(nGContext, GColorWhite);
     n_graphics_fill_circle(nGContext, GPoint(layer->frame.size.w / 2, (10 * (index + 1)) + (5 * index)), 4);
@@ -147,7 +147,7 @@ static void draw_row_callback(GContext *ctx, const Layer *cell_layer,
     // Draw this row's index
     ctx->text_color = GColorWhite;
     
-    const char *item_text = &action_menu->config->root_level->items[cell_index->row].label;
+    const char *item_text = action_menu->config->root_level->items[cell_index->row].label;
     
 #ifdef PBL_RECT
     GTextAlignment align = GTextAlignmentLeft;
@@ -226,15 +226,15 @@ ActionMenu * action_menu_open(ActionMenuConfig * config)
     action_menu->config = config;
     action_menu->level_index = 0;
     
-    Window *main = window_create();
-    main->user_data = action_menu;
+    Window *action_menu_main_window = window_create();
+    action_menu_main_window->user_data = action_menu;
     
-    window_set_window_handlers(main, (WindowHandlers) {
+    window_set_window_handlers(action_menu_main_window, (WindowHandlers) {
         .load = action_menu_window_load,
         .unload = action_menu_window_unload,
     });
     
-    window_stack_push(main, true);
+    window_stack_push(action_menu_main_window, true);
     
     app_event_loop();
     

@@ -141,7 +141,7 @@ void vibrate_stop(void)
 
 static void _print_pattern(VibratePattern_t *pattern)
 {
-    printf(">>> vibrate @%u:\n", pattern);
+    printf(">>> vibrate @%u:\n", (unsigned int)pattern);
     printf("\tlength:%d, val[%d]=(.frequency=%u, .duration=%u)\n",
            pattern->length,
            pattern->cur_buffer_index,

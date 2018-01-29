@@ -21,6 +21,9 @@
 
 #include "draw_command.h"
 
+//Forward declare resource_load
+void resource_load(ResHandle resource_handle, uint8_t* buffer, size_t size);
+
 /*\
 |*| Note that the files aren't actually fully persisted in memory.
 |*| Rather, we first load the resource, then check the magic word

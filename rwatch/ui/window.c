@@ -8,6 +8,7 @@
 
 #include "librebble.h"
 #include "ngfxwrap.h"
+#include "log.h"
 
 // Top node on the doubly linked list
 window_node *top_window;
@@ -44,7 +45,7 @@ void window_set_window_handlers(Window *window, WindowHandlers handlers)
 }
 
 static void push_animation_setup(Animation *animation) {
-    printf(APP_LOG_LEVEL_INFO, "Animation started!");
+    SYS_LOG("window", APP_LOG_LEVEL_INFO, "Animation started!");
     
     /*Window *top = top_window->window;
     Layer *previous = top_window->previous->window->root_layer;
@@ -66,7 +67,7 @@ static void push_animation_update(Animation *animation,
 }
 
 static void push_animation_teardown(Animation *animation) {
-    printf(APP_LOG_LEVEL_INFO, "Animation finished!");
+    SYS_LOG("window", APP_LOG_LEVEL_INFO, "Animation finished!");
     Layer *previous = top_window->previous->window->root_layer;
     layer_remove_from_parent(previous);
     //layer_add_child(previous, prev)
@@ -82,7 +83,6 @@ void window_stack_push(Window *window, bool animated)
     if (node == NULL)
     {
         SYS_LOG("window", APP_LOG_LEVEL_ERROR, "No memory for window_node");
-        return NULL;
     }
     node->window = window;
     node->previous = top_window;
@@ -168,7 +168,7 @@ bool window_stack_contains_window(Window *window)
     // Loop through all window nodes
     while (node->previous != NULL)
     {
-        if (node == window)
+        if (node->window == window)
         {
             return true;
         }

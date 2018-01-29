@@ -10,6 +10,8 @@
 #include "rebbleos.h"
 #include "menu.h"
 
+void menu_cell_chalk_draw(GContext *ctx, const Layer *layer, const char *previous, MenuItem *selected, const char *next);
+
 MenuItems* menu_items_create(uint16_t capacity)
 {
     MenuItems *result = (MenuItems *) calloc(1, sizeof(MenuItems)); // XXX: use app heap allocator

@@ -7,6 +7,7 @@
 
 #include "librebble.h"
 #include "scroll_layer.h"
+#include "property_animation.h"
 #include "utils.h"
 
 #define BUTTON_REPEAT_INTERVAL_MS 600

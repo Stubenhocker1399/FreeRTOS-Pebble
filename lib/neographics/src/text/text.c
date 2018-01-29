@@ -236,7 +236,7 @@ void n_graphics_draw_text(
 n_GSize n_graphics_text_layout_get_content_size(const char * text, n_GFont const font)
 {
     uint32_t text_len = strlen(text);
-    n_graphics_text_layout_get_content_size_with_index(text, font, 0, text_len);
+    return n_graphics_text_layout_get_content_size_with_index(text, font, 0, text_len);
 }
 
 n_GSize n_graphics_text_layout_get_content_size_with_index(const char *text, n_GFont const font, uint32_t idx, uint32_t idx_end)

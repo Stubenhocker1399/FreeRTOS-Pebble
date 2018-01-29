@@ -19,10 +19,10 @@
 typedef struct ActionBarLayer
 {
     Layer *layer;
-    GBitmap *icons[NUM_ACTION_BAR_ITEMS + 1];
+    const GBitmap *icons[NUM_ACTION_BAR_ITEMS + 1];
     GColor background_color;
     void *context;
-    ClickConfigProvider *click_config_provider;
+    ClickConfigProvider click_config_provider;
 } ActionBarLayer;
 
 ActionBarLayer *action_bar_layer_create();

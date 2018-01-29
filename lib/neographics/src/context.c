@@ -20,6 +20,7 @@
 \*/
 
 #include "context.h"
+#include "rebbleos.h"
 
 // TODO optimization: calculate bytefill when color is set.
 

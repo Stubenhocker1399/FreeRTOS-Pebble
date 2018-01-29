@@ -35,7 +35,7 @@ typedef enum {
 } AnimationCurve;
 
 typedef void (*AnimationSetupImplementation)(struct Animation *animation);
-typedef void (*AnimationUpdateImplementation)(struct Animation *animation, const uint32_t time_normalized);
+typedef void (*AnimationUpdateImplementation)(struct Animation *animation, const int32_t time_normalized);
 typedef void (*AnimationTeardownImplementation)(struct Animation *animation);
 
 typedef struct AnimationImplementation

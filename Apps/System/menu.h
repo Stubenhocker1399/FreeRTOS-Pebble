@@ -40,6 +40,8 @@ MenuItems* menu_items_create(uint16_t capacity);
 void menu_items_destroy(MenuItems *items);
 void menu_items_add(MenuItems *items, MenuItem item);
 
+typedef struct Menu Menu;
+
 // called when back is pressed while in top menu
 typedef void (*MenuExitCallback)(struct Menu *menu, void *context);
 

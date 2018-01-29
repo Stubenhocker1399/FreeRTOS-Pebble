@@ -32,7 +32,7 @@ StatusBarLayer *status_bar_layer_create(void)
     status_bar->layer = layer;
     status_bar->background_color = GColorDarkGray;
     status_bar->text_color = GColorWhite;
-    status_bar->separator_mode = StatusBarLayerSeparatorModeDotted;
+    status_bar->separator_mode = (StatusBarLayerSeparatorMode*)StatusBarLayerSeparatorModeDotted;
     
     layer_set_update_proc(layer, draw);
     
@@ -45,7 +45,7 @@ StatusBarLayer *status_bar_layer_create(void)
 
 void status_bar_layer_destroy(StatusBarLayer *status_bar)
 {
-    layer_destroy(status_bar);
+    layer_destroy(status_bar_layer_get_layer(status_bar));
     app_free(status_bar);
 }
 
@@ -97,7 +97,7 @@ static void draw(Layer *layer, GContext *context)
     graphics_draw_text_app(context, time_string, time_font, text_bounds, GTextOverflowModeTrailingEllipsis, n_GTextAlignmentLeft, 0);
     
     // TODO: Draw the separator
-    if (status_bar->separator_mode == StatusBarLayerSeparatorModeDotted)
+    if (*status_bar->separator_mode == StatusBarLayerSeparatorModeDotted)
     {
         
     }

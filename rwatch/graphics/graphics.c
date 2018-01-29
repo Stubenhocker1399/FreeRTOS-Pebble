@@ -9,6 +9,7 @@
 #include "upng.h"
 #include "png.h"
 
+void graphics_draw_bitmap_in_rect(GContext *ctx, const GBitmap *bitmap, GRect rect); //XXX
 
 GRect _jimmy_layer_offset(n_GContext *ctx, n_GRect rect)
 {
@@ -64,7 +65,7 @@ void graphics_draw_text_app(
                             text_attributes);
 }
 
-void graphics_draw_bitmap_in_rect_app(GContext *ctx, GBitmap *bitmap, GRect rect)
+void graphics_draw_bitmap_in_rect_app(GContext *ctx, const GBitmap *bitmap, GRect rect)
 {
     graphics_draw_bitmap_in_rect(ctx, bitmap, _jimmy_layer_offset(ctx, rect));
 }
@@ -90,16 +91,17 @@ GBitmap *graphics_capture_frame_buffer(n_GContext *context)
     return (GBitmap *)display_get_buffer();
 }
 
-GBitmap *graphics_capture_frame_buffer_format(n_GContext *context, GBitmap format)
+GBitmap *graphics_capture_frame_buffer_format(n_GContext *context, GBitmapFormat format)
 {
     // TODO Honestly not entirely sure what is expected here
     // rbl_lock_frame_buffer
     return (GBitmap *)display_get_buffer();
 }
 
-void graphics_release_frame_buffer(n_GContext *context, GBitmap *bitmap)
+bool graphics_release_frame_buffer(n_GContext *context, GBitmap *bitmap)
 {
     // rbl_unlock_frame_buffer
+    return false; //XXX
 }
 
 

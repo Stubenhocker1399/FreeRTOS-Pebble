@@ -145,9 +145,9 @@ void notification_window_load(Window *window)
     
     GRect bounds = layer_get_unobstructed_bounds(layer);
     
-    Layer *main = layer_create(bounds);
-    layer_set_update_proc(main, notification_window_update_proc);
-    layer_add_child(layer, main);
+    Layer *notification_main_layer = layer_create(bounds);
+    layer_set_update_proc(notification_main_layer, notification_window_update_proc);
+    layer_add_child(layer, notification_main_layer);
     
     // Set the click config provider
     window_set_click_config_provider_with_context(window, (ClickConfigProvider) click_config_provider, notification_window);
@@ -155,7 +155,7 @@ void notification_window_load(Window *window)
     // Status Bar
     status_bar = status_bar_layer_create();
     status_bar_layer_set_colors(status_bar, notification_window->active->color, GColorWhite);
-    layer_add_child(main, status_bar_layer_get_layer(status_bar));
+    layer_add_child(notification_main_layer, status_bar_layer_get_layer(status_bar));
     
     layer_mark_dirty(layer);
     window_dirty(true);
@@ -168,9 +168,9 @@ void notification_window_update_proc(Layer *layer, GContext *ctx)
     GRect bounds = layer_get_unobstructed_bounds(layer);
     
     GBitmap *icon = notification->icon;
-    char *app = notification->app_name;
-    char *title = notification->title;
-    char *body = notification->body;
+    const char *app = notification->app_name;
+    const char *title = notification->title;
+    const char *body = notification->body;
     
     SYS_LOG("notification_window", APP_LOG_LEVEL_DEBUG, app);
     
