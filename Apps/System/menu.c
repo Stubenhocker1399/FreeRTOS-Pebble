@@ -14,21 +14,27 @@ void menu_cell_chalk_draw(GContext *ctx, const Layer *layer, const char *previou
 
 MenuItems* menu_items_create(uint16_t capacity)
 {
-    MenuItems *result = (MenuItems *) calloc(1, sizeof(MenuItems)); // XXX: use app heap allocator
+    MenuItems *result = (MenuItems *) app_calloc(1, sizeof(MenuItems));
     result->capacity = capacity;
     result->count = 0;
+    result->back = NULL;
     if (capacity > 0)
-        result->items = (MenuItem *) calloc(capacity, sizeof(MenuItem)); // XXX: use app heap allocator
+        result->items = (MenuItem *) app_calloc(capacity, sizeof(MenuItem));
     return result;
 }
 
 void menu_items_destroy(MenuItems *items)
 {
+    if (!items)
+        return;
+
     if (items->back)
         menu_items_destroy(items->back);
+
     if (items->capacity > 0)
-        free(items->items);
-    free(items);
+        app_free(items->items);
+
+    app_free(items);
 }
 
 void menu_items_add(MenuItems *items, MenuItem item)
@@ -63,20 +69,25 @@ static void select_click_callback(MenuLayer *menu_layer, MenuIndex *index, Menu 
 
 static void draw_row_callback(GContext *ctx, const Layer *cell_layer, MenuIndex *index, Menu *menu)
 {
-#ifdef PBL_RECT
     MenuItem *item = &menu->items->items[index->row];
     GBitmap *gbitmap = gbitmap_create_with_resource(item->image_res_id);
+#ifdef PBL_RECT
     menu_cell_basic_draw(ctx, cell_layer, item->text, item->sub_text, gbitmap);
-    gbitmap_destroy(gbitmap);
 #else
-    menu_cell_chalk_draw(ctx, menu_get_layer(menu), menu->items->items[(index->row) - 1].text, &menu->items->items[index->row], menu->items->items[(index->row) + 1].text);
+    // The main menu on chalk has left text alignment and icons, but has to be shifted to the right
+    static const int16_t rightShift = 20;
+    GRect frame = layer_get_frame(cell_layer);
+    frame.origin.x += rightShift;
+    menu_cell_basic_draw_ex(ctx, frame, item->text, item->sub_text, gbitmap, GTextAlignmentLeft);
+    frame.origin.x -= rightShift;
 #endif
+    gbitmap_destroy(gbitmap);
 }
 
 
 Menu* menu_create(GRect frame)
 {
-    Menu *menu = (Menu *) calloc(1, sizeof(Menu)); // XXX: use app heap allocator
+    Menu *menu = (Menu *) app_calloc(1, sizeof(Menu));
     menu->items = menu_items_create(0);
     menu->layer = menu_layer_create(frame);
     menu_layer_set_highlight_colors(menu->layer, GColorRed, GColorWhite);
@@ -94,7 +105,7 @@ void menu_destroy(Menu *menu)
     if (menu->items)
         menu_items_destroy(menu->items);
     menu_layer_destroy(menu->layer);
-    free(menu);
+    app_free(menu);
 }
 
 Layer* menu_get_layer(Menu *menu)

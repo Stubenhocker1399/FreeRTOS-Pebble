@@ -8,17 +8,21 @@
 
 #include "librebble.h"
 #include "ngfxwrap.h"
-#include "log.h"
+#include "node_list.h"
 
-// Top node on the doubly linked list
-window_node *top_window;
+static list_head _window_list_head = LIST_HEAD(_window_list_head);
+
+void _window_unload_proc(Window *window);
+void _window_load_proc(Window *window);
+void _window_load_click_config(Window *window);
 
 /*
  * Create a new top level window and all of the contents therein
  */
-Window *window_create()
+Window *window_create(void)
 {
-    Window *window = app_calloc(1, sizeof(Window));
+    Window *window = calloc(1, sizeof(Window));
+    
     if (window == NULL)
     {
         SYS_LOG("window", APP_LOG_LEVEL_ERROR, "No memory for Window");
@@ -29,7 +33,8 @@ Window *window_create()
     
     window->root_layer = layer_create(bounds);
     window->background_color = GColorWhite;
-    
+    window->is_loaded = false;
+
     return window;
 }
 
@@ -57,8 +62,8 @@ static void push_animation_update(Animation *animation,
     // Animate some completion variable
     int s_animation_percent = ((int)progress * 100) / ANIMATION_NORMALIZED_MAX;
     
-    Window *top = top_window->window;
-    Layer *previous = top_window->previous->window->root_layer;
+//     Window *wind = (Window*)(_window_list_head->data);
+//     Layer *previous = top_window->previous->window->root_layer;
     /*
     previous->bounds = GRect(0 - ((DISPLAY_COLS / 100) * s_animation_percent), previous->bounds.origin.y, previous->bounds.size.w, previous->bounds.size.h);
     top->root_layer->bounds = GRect(DISPLAY_COLS - ((DISPLAY_COLS / 100) * s_animation_percent), top->root_layer->bounds.origin.y, top->root_layer->bounds.size.w, top->root_layer->bounds.size.h);*/
@@ -68,8 +73,8 @@ static void push_animation_update(Animation *animation,
 
 static void push_animation_teardown(Animation *animation) {
     SYS_LOG("window", APP_LOG_LEVEL_INFO, "Animation finished!");
-    Layer *previous = top_window->previous->window->root_layer;
-    layer_remove_from_parent(previous);
+//     Layer *previous = top_window->previous->window->root_layer;
+//     layer_remove_from_parent(previous);
     //layer_add_child(previous, prev)
 }
 
@@ -78,22 +83,8 @@ static void push_animation_teardown(Animation *animation) {
  */
 void window_stack_push(Window *window, bool animated)
 {
-    // Make it's node in the doubly linked list
-    window_node *node = app_calloc(1, sizeof(window_node));
-    if (node == NULL)
-    {
-        SYS_LOG("window", APP_LOG_LEVEL_ERROR, "No memory for window_node");
-    }
-    node->window = window;
-    node->previous = top_window;
-    top_window->next = node;
-    node->next = NULL;
-    
-    window->node = node;
-    
-    // Make it the top
-    top_window = node;
-    
+    list_init_node(&window->node);
+    list_insert_head(&_window_list_head, &window->node);
     if (animated)
     {
         // Animate the window change
@@ -106,12 +97,13 @@ void window_stack_push(Window *window, bool animated)
             .teardown = push_animation_teardown
         };
         animation_set_implementation(animation, &implementation);
-        
+
         // Play the animation
         //animation_schedule(animation);
     }
-    
+    window_configure(window);
     window_dirty(true);
+    window_count();
 }
 
 /*
@@ -119,11 +111,15 @@ void window_stack_push(Window *window, bool animated)
  */
 Window * window_stack_pop(bool animated)
 {
-    window_stack_remove(top_window->window, animated);
+    Window *wind = window_stack_get_top_window();
+    window_stack_remove(wind, animated);
     
-    return top_window->window;
-    
-    window_dirty(true);
+    Window *newwind = window_stack_get_top_window();
+
+    if (newwind)
+        window_configure(newwind);
+
+    return wind;
 }
 
 /*
@@ -131,22 +127,8 @@ Window * window_stack_pop(bool animated)
  */
 bool window_stack_remove(Window *window, bool animated)
 {
-    // Can't remove the root!
-    if (window->node->previous == NULL) {
-        return false;
-    }
-    
-    window->node->next->previous = window->node->previous;
-    
-    window->node->previous->next = window->node->next;
-    
-    if (window->node == top_window)
-    {
-        top_window = window->node->previous;
-    }
-    
-    app_free(window->node);
-    
+    list_remove(&_window_list_head, &window->node);
+
     return true;
 }
 
@@ -155,7 +137,25 @@ bool window_stack_remove(Window *window, bool animated)
  */
 Window * window_stack_get_top_window(void)
 {
-    return top_window->window;
+    return list_elem(list_get_head(&_window_list_head), Window, node);
+}
+
+uint16_t window_count(void)
+{
+    uint16_t count = 0;
+    Window *w;
+    
+    if (list_get_head(&_window_list_head) == NULL)
+        return 0;
+    
+    list_foreach(w, &_window_list_head, Window, node)
+    {
+        count++;
+    }
+    
+    SYS_LOG("window", APP_LOG_LEVEL_INFO, "COUNT %d", count);
+    
+    return count;
 }
 
 /*
@@ -163,17 +163,10 @@ Window * window_stack_get_top_window(void)
  */
 bool window_stack_contains_window(Window *window)
 {
-    window_node *node = top_window;
-    
-    // Loop through all window nodes
-    while (node->previous != NULL)
-    {
-        if (node->window == window)
-        {
+    Window *w;
+    list_foreach(w, &_window_list_head, Window, node)
+        if (window == w)
             return true;
-        }
-        node = node->previous;
-    }
     
     return false;
 }
@@ -183,10 +176,26 @@ bool window_stack_contains_window(Window *window)
  */
 void window_destroy(Window *window)
 {
-    // free all of the layers
+    list_remove(&_window_list_head, &window->node);
+    SYS_LOG("window", APP_LOG_LEVEL_INFO, "Destroy!");
+    window_count();
+    /* Unload the window */
+    _window_unload_proc(window);
+    /* free all of the layers */
     layer_destroy(window->root_layer);
-    // and now the window
+    /* and now the window */
     app_free(window);
+    window = window_stack_get_top_window();
+    if (!window)
+    {
+        SYS_LOG("window", APP_LOG_LEVEL_INFO, "No more windows!");
+        return;
+    }
+    
+    /* Clean up the clink handler and remap back to our current window */
+    _window_load_click_config(window);
+    window_draw();
+    window_dirty(true);
 }
 
 /*
@@ -206,28 +215,38 @@ Layer *window_get_root_layer(Window *window)
  */
 void window_dirty(bool is_dirty)
 {
-    if (top_window->window->is_render_scheduled != is_dirty)
+    Window *wind = window_stack_get_top_window();
+    
+    if (wind == NULL)
+        return;
+    
+    if (wind->is_render_scheduled != is_dirty)
     {
-        top_window->window->is_render_scheduled = is_dirty;
+        wind->is_render_scheduled = is_dirty;
         
         if (is_dirty)
             appmanager_post_draw_message();
     }
 }
 
-void window_draw() {
-    if (top_window->window && top_window->window->is_render_scheduled)
+void window_draw()
+{
+    Window *wind = window_stack_get_top_window();
+    
+    if (wind == NULL)
+        return;
+    if (wind && wind->is_render_scheduled)
     {
         GContext *context = rwatch_neographics_get_global_context();
-        GRect frame = layer_get_frame(top_window->window->root_layer);
+        GRect frame = layer_get_frame(wind->root_layer);
         context->offset = frame;
-        context->fill_color = top_window->window->background_color;
-        graphics_fill_rect_app(context, GRect(0, 0, frame.size.w, frame.size.h), 0, GCornerNone);
+        context->fill_color = wind->background_color;
+        graphics_fill_rect(context, GRect(0, 0, frame.size.w, frame.size.h), 0, GCornerNone);
         
-        walk_layers(top_window->window->root_layer, context);
+        layer_draw(wind->root_layer, context);
         
         rbl_draw();
-        top_window->window->is_render_scheduled = false;
+        wind->is_render_scheduled = false;
     }
 }
 
@@ -313,19 +332,49 @@ void window_set_click_context(ButtonId button_id, void *context)
  * These will call through to the pointers to the functions in
  * the user supplied window
  */
-void rbl_window_load_proc(void)
+void window_configure(Window *window)
 {
-    // TODO
-    // we are not tracking app root windows yet, just share out the top_window for now
-    if (top_window->window->window_handlers.load)
-        top_window->window->window_handlers.load(top_window->window);
+    // we assume they are configured now
+    _window_load_proc(window);
+    _window_load_click_config(window);
 }
 
-void rbl_window_load_click_config(void)
+/* 
+ * Call the window's _load handler and flag as loaded
+ */
+void _window_load_proc(Window *window)
 {
-    if (top_window->window->click_config_provider) {
-        void* context = top_window->window->click_config_context ? top_window->window->click_config_context : top_window->window;
-        top_window->window->click_config_provider(context);
-    }
+    if (window->is_loaded)
+        return;
+         
+    if (window->window_handlers.load) 
+    window->window_handlers.load(window); 
+         
+    /* we should flag as loaded even if they don't have a load handler */ 
+    window->is_loaded = true; 
+    return;
 }
 
+/* 
+ * Call the window's _unload handler and flag as unloaded
+ */
+void _window_unload_proc(Window *window) 
+{ 
+    if (!window->is_loaded)
+        return;
+    
+    if (window->window_handlers.unload)
+        window->window_handlers.unload(window);
+    
+    /* we should flag as unloaded even if they don't have a load handler */
+    window->is_loaded = false;
+    return;
+}
+
+void _window_load_click_config(Window *window) 
+{    
+    if (window->click_config_provider) { 
+        void* context = window->click_config_context ? window->click_config_context : window; 
+        window->click_config_provider(context); 
+    } 
+}

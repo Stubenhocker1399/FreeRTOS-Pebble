@@ -47,6 +47,12 @@ static MenuItems* test_item_selected(const MenuItem *item)
     return NULL;
 }
 
+static MenuItems* run_test_item_selected(const MenuItem *item)
+{
+//     appmanager_app_start("TestApp");
+    return NULL;
+}
+
 static MenuItems* notification_item_selected(const MenuItem *item)
 {
     appmanager_app_start("Notification");
@@ -81,7 +87,6 @@ static void exit_to_watchface(struct Menu *menu, void *context)
 
 static void systemapp_window_load(Window *window)
 {
-    SYS_LOG("systemapp", APP_LOG_LEVEL_INFO, "WF load");
     Layer *window_layer = window_get_root_layer(s_main_window);
 #ifdef PBL_RECT
     s_menu = menu_create(GRect(0, 16, DISPLAY_COLS, DISPLAY_ROWS - 16));
@@ -96,20 +101,18 @@ static void systemapp_window_load(Window *window)
 
     menu_set_click_config_onto_window(s_menu, window);
 
-    MenuItems *items = menu_items_create(8);
+    MenuItems *items = menu_items_create(4);
     menu_items_add(items, MenuItem("Watchfaces", "All your faces", 25, watch_list_item_selected));
     menu_items_add(items, MenuItem("Settings", "Move Along", 24, test_item_selected));
+    menu_items_add(items, MenuItem("Tests", NULL, 25, run_test_item_selected));
     menu_items_add(items, MenuItem("RebbleOS", "... v0.0.0.1", 24, NULL));
-    menu_items_add(items, MenuItem("... Soon (TM)", NULL, 25, notification_item_selected));
-    menu_items_add(items, MenuItem("You", NULL, 23, NULL));
-    menu_items_add(items, MenuItem("guys", NULL, 23, NULL));
-    menu_items_add(items, MenuItem("are", NULL, 23, NULL));
-    menu_items_add(items, MenuItem("awesome!", NULL, 20, NULL));
     menu_set_items(s_menu, items);
 
-    // Status Bar
+#ifdef PBL_RECT
+    // Status bar is only on rectangular pebbles
     status_bar = status_bar_layer_create();
     layer_add_child(menu_get_layer(s_menu), status_bar_layer_get_layer(status_bar));
+#endif
 
     //tick_timer_service_subscribe(MINUTE_UNIT, prv_tick_handler);
 }
@@ -121,7 +124,6 @@ static void systemapp_window_unload(Window *window)
 
 void systemapp_init(void)
 {
-    SYS_LOG("systemapp", APP_LOG_LEVEL_INFO, "init");
     s_main_window = window_create();
 
     window_set_window_handlers(s_main_window, (WindowHandlers) {
@@ -148,7 +150,6 @@ void systemapp_tick(void)
 {
     struct tm *tick_time = rbl_get_tm();
     
-    SYS_LOG("systemapp", APP_LOG_LEVEL_INFO, "system tick");
     // Store time
     s_last_time.hours = tick_time->tm_hour;
     s_last_time.hours -= (s_last_time.hours > 12) ? 12 : 0;

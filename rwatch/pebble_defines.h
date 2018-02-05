@@ -7,15 +7,26 @@
  * Author: Barry Carter <barry.carter@gmail.com>
  */
 
+#ifdef PBL_RECT
+#define PBL_IF_RECT_ELSE(rct, round) (rct)
+#else
+#define PBL_IF_RECT_ELSE(rct, round) (round)
+#endif
+
+#if defined REBBLE_PLATFORM_TINTIN
+#define PBL_PLATFORM_SWITCH(tintin, snowy, chalk, diorite, emery) (tintin)
+#elif defined REBBLE_PLATFORM_SNOWY
+#define PBL_PLATFORM_SWITCH(tintin, snowy, chalk, diorite, emery) (snowy)
+#elif defined REBBLE_PLATFORM_CHALK
+#define PBL_PLATFORM_SWITCH(tintin, snowy, chalk, diorite, emery) (chalk)
+#else
+#error Add the new platform to PBL_PLATFORM_SWITCH in pebble_defines.h
+#endif
+
 #define graphics_context_set_fill_color n_graphics_context_set_fill_color
-#define graphics_fill_rect n_graphics_fill_rect
 #define graphics_context_set_stroke_color n_graphics_context_set_stroke_color
 #define graphics_context_set_stroke_width n_graphics_context_set_stroke_width
 #define graphics_context_set_antialiased n_graphics_context_set_antialiased
-
-#define graphics_fill_circle n_graphics_fill_circle
-#define graphics_draw_circle n_graphics_draw_circle
-#define graphics_draw_line n_graphics_draw_line
 
 #define GColorFromRGBA n_GColorFromRGBA
 #define GColorFromRGB n_GColorFromRGB
@@ -31,7 +42,7 @@
 #define GTextAlignmentCenter n_GTextAlignmentCenter
 #define GTextAlignmentRight n_GTextAlignmentRight
 #define GTextAttributes n_GTextAttributes
-#define graphics_draw_text n_graphics_draw_text
+
 
 // math
 #define TRIG_MAX_RATIO 0xffff

@@ -36,7 +36,9 @@ typedef struct Layer
 // Layer Functions
 Layer *layer_create(GRect bounds);
 Layer *layer_create_with_data(GRect frame, size_t data_size);
+void layer_ctor(Layer* layer, GRect frame);
 void layer_destroy(Layer *layer);
+void layer_dtor(Layer* layer);
 void layer_set_frame(Layer *layer, GRect frame);
 GRect layer_get_frame(const Layer *layer);
 void layer_set_bounds(Layer *layer, GRect bounds);
@@ -60,12 +62,7 @@ bool layer_get_hidden(const Layer *layer);
 void layer_set_clips(Layer *layer, bool clips);  //TODO
 bool layer_get_clips(const Layer *layer); //TODO
 void *layer_get_data(const Layer *layer); //TODO
-
-
-void walk_layers(/*const*/ Layer *layer, GContext *context);
-
+void layer_draw(const Layer *layer, GContext *context);
 // updates context offset based on layer frame, used to properly adjust layer drawing calls
 void layer_apply_frame_offset(const Layer *layer, GContext *context);
-
-void layer_delete_tree(Layer *layer);
 
