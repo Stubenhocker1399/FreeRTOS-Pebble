@@ -221,7 +221,7 @@ void hw_display_start_frame(uint8_t x, uint8_t y) {
     stm32_power_request(STM32_POWER_AHB1, RCC_AHB1Periph_GPIOB);
     stm32_power_request(STM32_POWER_APB1, RCC_APB1Periph_SPI2);
 
-    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "tintin: here we go, slowly blitting %d %d\n", x, y);
+    KERN_LOG("tintin", APP_LOG_LEVEL_INFO, "here we go, slowly blitting %d %d\n", x, y);
     GPIO_WriteBit(GPIOB, 1 << 12, 1);
     delay_us(7);
     _display_write(0x80);
@@ -397,10 +397,10 @@ void hw_flash_init(void) {
     part_id |= _hw_flash_txrx(JEDEC_DUMMY) << 0;
     _hw_flash_enable(0);
     
-    KERN_LOG("tintin flash", APP_LOG_LEVEL_INFO, "tintin flash: JEDEC ID %08lx", part_id);
+    KERN_LOG("flash", APP_LOG_LEVEL_INFO, "tintin flash: JEDEC ID %08lx", part_id);
     
     if (part_id != JEDEC_IDCODE_MICRON_N25Q032A11) {
-        KERN_LOG("tintin flash", APP_LOG_LEVEL_ERROR, "unsupported part ID");
+        KERN_LOG("flash", APP_LOG_LEVEL_ERROR, "unsupported part ID");
     }
     
     stm32_power_release(STM32_POWER_APB2, RCC_APB2Periph_SPI1);

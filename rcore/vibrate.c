@@ -142,7 +142,6 @@ void vibrate_stop(void)
 
 static void _print_pattern(VibratePattern_t *pattern)
 {
-    SYS_LOG("vibrate", APP_LOG_LEVEL_INFO, "@%u:", (unsigned int)pattern);
     SYS_LOG("vibrate", APP_LOG_LEVEL_INFO, "\tlength:%d, val[%d]=(.frequency=%u, .duration=%u)",
            pattern->length,
            pattern->cur_buffer_index,

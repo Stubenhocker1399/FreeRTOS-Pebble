@@ -59,6 +59,7 @@ typedef struct Window
 
 // Window management
 Window *window_create();
+void window_configure(Window *window);
 void window_destroy(Window *window) ;
 void window_set_click_config_provider(Window *window, ClickConfigProvider click_config_provider);
 void window_set_click_config_provider_with_context(Window *window, ClickConfigProvider click_config_provider, void *context);

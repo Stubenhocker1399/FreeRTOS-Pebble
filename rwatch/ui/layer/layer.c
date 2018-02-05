@@ -201,7 +201,7 @@ bool layer_get_hidden(const Layer *layer)
 
 void layer_draw(const Layer *layer, GContext *context)
 {
-    _layer_walk(layer, context);
+    _layer_walk((struct Layer *)layer, context);
 }
 
 void layer_apply_frame_offset(const Layer *layer, GContext *context)

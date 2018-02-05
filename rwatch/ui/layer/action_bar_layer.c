@@ -9,6 +9,7 @@
 #include "utils.h"
 #include "action_bar_layer.h"
 #include "bitmap_layer.h"
+#include "graphics_wrapper.h"
 
 ActionBarLayer *action_bar_layer_create()
 {
@@ -29,7 +30,7 @@ ActionBarLayer *action_bar_layer_create()
 
 void action_bar_layer_destroy(ActionBarLayer *action_bar)
 {
-    layer_destroy(action_bar_layer_get_layer(action_bar));
+    layer_destroy(action_bar->layer);
     
     app_free(action_bar);
 }
@@ -102,7 +103,7 @@ static void draw(Layer *layer, GContext *context)
 #ifdef PBL_RECT
     graphics_fill_rect(context, full_bounds, 0, GCornerNone);
 #else
-    n_graphics_fill_circle(context, GPoint(full_bounds.origin.x + DISPLAY_COLS + 7, full_bounds.origin.y + (DISPLAY_COLS / 2)), DISPLAY_COLS + 20);
+    graphics_fill_circle(context, GPoint(full_bounds.origin.x + DISPLAY_COLS + 7, full_bounds.origin.y + (DISPLAY_COLS / 2)), DISPLAY_COLS + 20);
 #endif
     
     // Draw the icons
@@ -116,7 +117,7 @@ static void draw(Layer *layer, GContext *context)
             // Draw the icon:
             GSize icon_size = action_bar->icons[i]->raw_bitmap_size;
 #ifdef PBL_RECT
-            graphics_draw_bitmap_in_rect(context, action_bar->icons[i], GRect(full_bounds.size.w - icon_size.w - 2, y - (increment / 2) - (icon_size.h / 2), icon_size.w, icon_size.h));
+            graphics_draw_bitmap_in_rect(context, (struct GBitmap *)action_bar->icons[i], GRect(full_bounds.size.w - icon_size.w - 2, y - (increment / 2) - (icon_size.h / 2), icon_size.w, icon_size.h));
 #else
             int offsetx = 0;
             int offsety = 0;
@@ -136,7 +137,7 @@ static void draw(Layer *layer, GContext *context)
                 default:
                     break;
             }
-            graphics_draw_bitmap_in_rect(context, action_bar->icons[i], GRect(full_bounds.size.w - icon_size.w - offsetx, y - (increment / 2) - (icon_size.h / 2) - offsety, icon_size.w, icon_size.h));
+            graphics_draw_bitmap_in_rect(context, (struct GBitmap *)action_bar->icons[i], GRect(full_bounds.size.w - icon_size.w - offsetx, y - (increment / 2) - (icon_size.h / 2) - offsety, icon_size.w, icon_size.h));
 #endif
         }
         

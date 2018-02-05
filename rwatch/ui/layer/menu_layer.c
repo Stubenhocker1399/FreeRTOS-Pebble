@@ -6,6 +6,7 @@
 #include "menu_layer.h"
 #include "menu.h"
 #include "utils.h"
+#include "graphics_wrapper.h"
 
 extern void graphics_draw_bitmap_in_rect(GContext *, GBitmap *, GRect);
 
@@ -53,7 +54,7 @@ void menu_layer_destroy(MenuLayer *menu)
     if (menu->cells_count > 0)
         app_free(menu->cells);
     app_free(menu);
-} 
+}
 
 int16_t menu_index_compare(const MenuIndex *a, const MenuIndex *b)
 {

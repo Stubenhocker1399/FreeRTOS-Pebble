@@ -101,7 +101,7 @@ GBitmap *graphics_capture_frame_buffer_format(n_GContext *context, GBitmapFormat
 bool graphics_release_frame_buffer(n_GContext *context, GBitmap *bitmap)
 {
     // rbl_unlock_frame_buffer
-    return false; //XXX
+    return false; //XXX see issue pebble-dev/RebbleOS#38
 }
 
 

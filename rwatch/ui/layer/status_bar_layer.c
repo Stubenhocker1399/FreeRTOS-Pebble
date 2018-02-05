@@ -9,6 +9,7 @@
 #include "node_list.h"
 #include "status_bar_layer.h"
 #include "appmanager.h"
+#include "graphics_wrapper.h"
 
 static void _draw(Layer *layer, GContext *context);
 
@@ -108,7 +109,7 @@ static void _draw(Layer *layer, GContext *context)
         graphics_context_set_stroke_color(context, status_bar->foreground_color);
         for(int i = 0; i < full_bounds.size.w; i += 2)
         {
-            n_graphics_draw_pixel(context, n_GPoint(i, full_bounds.size.h - 2));
+            graphics_draw_pixel(context, n_GPoint(i, full_bounds.size.h - 2));
         }
     }
     

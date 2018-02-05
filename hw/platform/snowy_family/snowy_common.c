@@ -182,19 +182,19 @@ void hw_watchdog_reset(void)
 
 static void  MemMang_Handler()
 {
-    KERN_LOG("MemHnd", APP_LOG_LEVEL_ERROR, "Memory manager Failed!");
+    printf("Memory manager Failed!\n");
     while(1);
 }
 
 void HardFault_Handler()
 {
-    KERN_LOG("snowy_common", APP_LOG_LEVEL_ERROR, "*** HARD FAULT ***");
+    printf("*** HARD FAULT ***\n");
     while(1);
 }
 
 void BusFault_Handler()
 {
-    KERN_LOG("snowy_common", APP_LOG_LEVEL_ERROR, "*** BUS FAULT ***");
+    printf("*** BUS FAULT ***\n");
     while(1);
 }
 
@@ -202,13 +202,13 @@ void UsageFault_Handler_C(uint32_t *sp)
 {
     uint16_t ufsr = *(uint16_t *)0xE000ED2A;
     
-    KERN_LOG("snowy_common", APP_LOG_LEVEL_ERROR, "*** USAGE FAULT ***");
-    KERN_LOG("snowy_common", APP_LOG_LEVEL_ERROR, "   R0: %08lx, R1: %08lx, R2: %08lx, R3: %08lx", sp[0], sp[1], sp[2], sp[3]);
-    KERN_LOG("snowy_common", APP_LOG_LEVEL_ERROR, "  R12: %08lx, LR: %08lx, PC: %08lx, SP: %ln", sp[4], sp[5], sp[6], sp);
-    KERN_LOG("snowy_common", APP_LOG_LEVEL_ERROR, "  UFSR: %04x\n", ufsr);
+    printf("*** USAGE FAULT ***\n");
+    printf("   R0: %08lx, R1: %08lx, R2: %08lx, R3: %08lx\n", sp[0], sp[1], sp[2], sp[3]);
+    printf("  R12: %08lx, LR: %08lx, PC: %08lx, SP: %ln\n", sp[4], sp[5], sp[6], sp);
+    printf("  UFSR: %04x\n", ufsr);
     
     if (ufsr & 1) {
-        KERN_LOG("snowy_common", APP_LOG_LEVEL_ERROR, "    *PC == %04x", *(uint16_t *)sp[6]);
+        printf("    *PC == %04x\n", *(uint16_t *)sp[6]);
     }
     while(1);
 }

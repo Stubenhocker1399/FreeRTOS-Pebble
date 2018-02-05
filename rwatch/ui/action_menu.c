@@ -9,6 +9,7 @@
 
 #include "rebbleos.h"
 #include "action_menu.h"
+#include "graphics_wrapper.h"
 
 /* STRUCT DEFS */
 struct ActionMenuLevel
@@ -51,7 +52,7 @@ void * action_menu_item_get_action_data(const ActionMenuItem * item)
 ActionMenuLevel * action_menu_level_create(uint16_t max_items)
 {
     ActionMenuLevel *level = (ActionMenuLevel *)app_calloc(1, sizeof(ActionMenuLevel) + (sizeof(ActionMenuItem) * max_items));
-    level->capacity = &max_items;
+    level->capacity = &max_items; //XXX
     level->count = 0;
     level->index = 0;
     
@@ -73,7 +74,7 @@ ActionMenuItem * action_menu_level_add_action(ActionMenuLevel * level, const cha
     new_item->cb = cb;
     new_item->action_data = action_data;
     
-    if (*level->capacity == level->count)
+    if (*level->capacity == level->count) //XXX
         return NULL;
     
     items[level->count++] = *new_item;
@@ -123,12 +124,12 @@ static void side_bar_update_proc(Layer *layer, GContext *nGContext)
     int index = (int)&action_menu->level_index;
     SYS_LOG("notification_window", APP_LOG_LEVEL_DEBUG, "INDEX: %d", index);
     graphics_context_set_fill_color(nGContext, GColorWhite);
-    n_graphics_fill_circle(nGContext, GPoint(layer->frame.size.w / 2, (10 * (index + 1)) + (5 * index)), 4);
+    graphics_fill_circle(nGContext, GPoint(layer->frame.size.w / 2, (10 * (index + 1)) + (5 * index)), 4);
 #else
     // On round, just draw a circle around the menu
     graphics_context_set_stroke_color(nGContext, config->colors.background);
     nGContext->stroke_width = 13;
-    n_graphics_draw_circle(nGContext, GPoint(DISPLAY_COLS / 2, DISPLAY_ROWS / 2), (DISPLAY_COLS / 2) - 5);
+    graphics_draw_circle(nGContext, GPoint(DISPLAY_COLS / 2, DISPLAY_ROWS / 2), (DISPLAY_COLS / 2) - 5);
 #endif
 }
 

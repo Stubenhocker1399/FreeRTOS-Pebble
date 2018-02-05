@@ -7,6 +7,7 @@
 
 #include "librebble.h"
 #include "text.h"
+#include "graphics_wrapper.h"
 
 void text_layer_draw(struct Layer *layer, GContext *context);
 

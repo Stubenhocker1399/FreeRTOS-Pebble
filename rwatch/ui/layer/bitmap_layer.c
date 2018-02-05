@@ -8,6 +8,7 @@
 #include "librebble.h"
 #include "upng.h"
 #include "png.h"
+#include "graphics_wrapper.h"
 
 
 static void _bitmap_update_proc(Layer *layer, GContext *nGContext);

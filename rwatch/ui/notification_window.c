@@ -11,6 +11,7 @@
 #include "status_bar_layer.h"
 #include "librebble.h"
 #include "ngfxwrap.h"
+#include "graphics_wrapper.h"
 
 // XXX TODO nofifications don't free memory
 static NotificationWindow *notification_window;
@@ -179,7 +180,7 @@ void notification_window_update_proc(Layer *layer, GContext *ctx)
     GRect rect_bounds = GRect(0, 0 - offset, bounds.size.w, 35);
     graphics_fill_rect(ctx, rect_bounds, 0, GCornerNone);
 #else
-    n_graphics_fill_circle(ctx, GPoint(DISPLAY_COLS / 2, (-DISPLAY_COLS + 35) - offset), DISPLAY_COLS);
+    graphics_fill_circle(ctx, GPoint(DISPLAY_COLS / 2, (-DISPLAY_COLS + 35) - offset), DISPLAY_COLS);
 #endif
     
     // Draw the icon:

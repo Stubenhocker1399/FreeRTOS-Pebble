@@ -9,6 +9,7 @@
 #include "stdio.h"
 #include "string.h"
 #include "math.h"
+#include "graphics_wrapper.h"
 
 
 // const char *app_name = "Simple";

@@ -122,7 +122,7 @@ void hw_get_time_str(char *buf)
     RTC_TimeTypeDef  RTC_TimeStructure;
 
     RTC_GetTime(RTC_Format_BIN, &RTC_TimeStructure);
-    DRV_LOG("snowy rtc", APP_LOG_LEVEL_INFO, buf, 12, "%02d:%02d:%02d",RTC_TimeStructure.RTC_Hours, RTC_TimeStructure.RTC_Minutes, RTC_TimeStructure.RTC_Seconds);
+    DRV_LOG("rtc", APP_LOG_LEVEL_INFO, buf, 12, "%02d:%02d:%02d",RTC_TimeStructure.RTC_Hours, RTC_TimeStructure.RTC_Minutes, RTC_TimeStructure.RTC_Seconds);
 }
 
 struct tm *hw_get_time(void)

@@ -9,6 +9,7 @@
 #include "librebble.h"
 #include "ngfxwrap.h"
 #include "node_list.h"
+#include "graphics_wrapper.h"
 
 static list_head _window_list_head = LIST_HEAD(_window_list_head);
 
@@ -76,6 +77,19 @@ static void push_animation_teardown(Animation *animation) {
 //     Layer *previous = top_window->previous->window->root_layer;
 //     layer_remove_from_parent(previous);
     //layer_add_child(previous, prev)
+}
+
+
+/*
+ * Deal with window level callbacks when a window is created.
+ * These will call through to the pointers to the functions in
+ * the user supplied window
+ */
+void window_configure(Window *window)
+{
+    // we assume they are configured now
+    _window_load_proc(window);
+    _window_load_click_config(window);
 }
 
 /*
@@ -324,19 +338,6 @@ void window_raw_click_subscribe(ButtonId button_id, ClickHandler down_handler, C
 void window_set_click_context(ButtonId button_id, void *context)
 {
     button_set_click_context(button_id, context);
-}
-
-
-/*
- * Deal with window level callbacks when a window is created.
- * These will call through to the pointers to the functions in
- * the user supplied window
- */
-void window_configure(Window *window)
-{
-    // we assume they are configured now
-    _window_load_proc(window);
-    _window_load_click_config(window);
 }
 
 /* 
