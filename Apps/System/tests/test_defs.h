@@ -153,3 +153,7 @@ bool action_menu_test_deinit(void);
 bool vibes_test_init(Window *window);
 bool vibes_test_exec(void);
 bool vibes_test_deinit(void);
+
+bool music_test_init(Window *window);
+bool music_test_exec(void);
+bool music_test_deinit(void);

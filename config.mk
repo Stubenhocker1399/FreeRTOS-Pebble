@@ -93,6 +93,7 @@ SRCS_all += rcore/gyro.c
 SRCS_all += rcore/main.c
 SRCS_all += rcore/notification_manager.c
 SRCS_all += rcore/notification_message.c
+SRCS_all += rcore/music_api.c
 SRCS_all += rcore/power.c
 SRCS_all += rcore/rebbleos.c
 SRCS_all += rcore/smartstrap.c

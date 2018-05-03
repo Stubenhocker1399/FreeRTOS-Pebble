@@ -48,6 +48,13 @@ typedef struct app_test_t {
 
 
 app_test _tests[] = {
+    { // TODO move down the list, don't want to steal the show
+        .test_name = "Music Test",
+        .test_desc = "Music API",
+        .test_init = &music_test_init,
+        .test_execute = &music_test_exec,
+        .test_deinit = &music_test_deinit,
+    },
     {
         .test_name = "Test the Test",
         .test_desc = "Verify this app",
