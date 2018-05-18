@@ -6,11 +6,8 @@
  */
 
 #include "rebbleos.h"
-#include "systemapp.h"
 #include "music_api.h"
-//#include "status_bar_layer.h"
 #include "test_defs.h"
-//#include "platform_res.h"
 
 music_track_info_t *music_track_info;
 
@@ -19,7 +16,7 @@ bool music_test_init(Window *window) {
     Layer *window_layer = window_get_root_layer(window);
     GRect bounds = layer_get_frame(window_layer);
 
-    music_track_info = music_init();
+    music_init();
 
     // TODO draw something when testing music actions via bluetooth, as those are likely not instant
     // Maybe do a user assisted test? aka 1. Press button to send play command, then 2. ask if music started playing, 3. depending on answer fail test
@@ -43,44 +40,48 @@ bool music_test_exec(void) {
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Exec: Music Test");
 
     char *test_artist = "The Beatles";
-    music_set_current_artist(music_track_info, test_artist);
-    test_assert(0 == strcmp(music_get_current_artist(music_track_info), test_artist));
+    music_set_current_artist(test_artist);
+    test_assert(0 == strcmp(music_get_current_artist(), test_artist));
+    SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Set current artist to %s, music_get_current_artist() returns %s", test_artist, music_get_current_artist());
 
     char *test_track = "Maxwell's Silver Hammer";
-    music_set_current_title(music_track_info, test_track);
-    test_assert(0 == strcmp(music_get_current_title(music_track_info), test_track));
+    music_set_current_title(test_track);
+    test_assert(0 == strcmp(music_get_current_title(), test_track));
+    // For some reason this hangs the system
+    //SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Set current track to %s, music_get_current_title() returns %s", test_track, music_get_current_title());
     
-    music_set_current_run_time(music_track_info, 44);
-    test_assert(music_get_current_run_time(music_track_info) == 44);
+    music_set_current_run_time(44);
+    test_assert(music_get_current_run_time() == 44);
+    SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Set current run time to 44, music_get_current_run_time() returns %d", music_get_current_run_time());
 
-    music_set_run_time(music_track_info, 207);
-    test_assert(music_get_run_time(music_track_info) == 207);
+    music_set_run_time(207);
+    test_assert(music_get_run_time() == 207);
+    SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Set run time to 207, music_get_run_time() returns %d", music_get_run_time());
 
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Setting callbacks");
 
-    music_set_callbacks(music_track_info, music_track_info->context, (MusicCallbacks) {
+    music_set_callbacks((MusicCallbacks) {
         .on_music_change = _on_music_change,
         .on_music_play_pause = _on_music_play_pause,
         .on_music_skip = _on_music_skip
     });
 
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Skipping track");
-    music_next(music_track_info);
+    music_next();
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Previous track");
-    music_prev(music_track_info);
+    music_prev();
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Play track");
-    music_play(music_track_info);
+    music_play();
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Pause track");
-    music_play(music_track_info);
+    music_pause();
     
-    SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Manually fire skip callback"); 
-    // This could be done better by asking the user to skip the track on his phone
-    music_track_info->callbacks.on_music_skip(music_track_info, music_track_info->context);
-
+    // TODO ask the user to skip the track on their phone to see
+    //      if on_music_skip gets triggered correctly
+    
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Volume up"); 
-    music_volume_up(music_track_info);
+    music_volume_up();
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "Volume down"); 
-    music_volume_down(music_track_info);
+    music_volume_down();
 
     test_complete(true);
     
@@ -89,6 +90,6 @@ bool music_test_exec(void) {
 
 bool music_test_deinit(void) {
     SYS_LOG("test", APP_LOG_LEVEL_DEBUG, "De-Init: Music Test");
-    music_destroy(music_track_info);
+    music_destroy();
     return true;
 }
